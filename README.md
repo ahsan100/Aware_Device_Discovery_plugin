@@ -1,7 +1,7 @@
-AWARE Plugin: YOUR PLUGIN
+AWARE Plugin: Device Discovery
 ==========================
 
-This plugin measures ...
+This plugin uses NSD to discover the devices on the similar network and uses CoAP to send sensor data.
 
 # Settings
 Parameters adjustable on the dashboard and client:
