@@ -3,18 +3,12 @@ package com.aware.plugin.device_discovery;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
-import android.net.nsd.NsdServiceInfo;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +29,7 @@ public class ContextCard implements IContextCard {
     public ContextCard() {}
 
     @Override
-    public View getContextCard(Context context) {
+    public View getContextCard(final Context context) {
         //Load card layout
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,9 +58,9 @@ public class ContextCard implements IContextCard {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Cursor cur = (Cursor) adapter.getItem(i);
                         Toast.makeText(mContext, cur.getString(cur.getColumnIndex(Provider.DeviceDiscovery_Data.HOST)), Toast.LENGTH_SHORT).show();
-                        //Intent intent = new Intent(mContext, CoAPDiscovery.class);
-                        //intent.putExtra("address", DEVICES.get(i).getHost());
-                        //mContext.startActivity(intent);
+                        Intent intent = new Intent(mContext, CoapDiscovery.class);
+                        intent.putExtra("address",  cur.getString(cur.getColumnIndex(Provider.DeviceDiscovery_Data.HOST)));
+                        context.startActivity(intent);
                         //startActivity(intent);
                     }
                 });

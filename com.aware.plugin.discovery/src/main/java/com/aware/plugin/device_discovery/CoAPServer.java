@@ -31,16 +31,16 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import java.net.URI;
 import java.util.Calendar;
 
-public class CoAPServer extends Service {
+public class COAPServer extends Service {
 
     public String action;
     public String extra;
-    CoapServer server;
+    org.eclipse.californium.core.CoapServer server;
     String TAG = "COAP::";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.server = new CoapServer();
+        this.server = new org.eclipse.californium.core.CoapServer();
 
         server.add(new TimeResource());
         Cursor data = getContentResolver().query(Aware_Provider.Aware_Settings.CONTENT_URI,null,Aware_Provider.Aware_Settings.SETTING_VALUE + "=?", new String[]{"true"},null);
@@ -114,14 +114,15 @@ public class CoAPServer extends Service {
         private int fieldNumber;
 
         public universalResource(String name, Context context, boolean visible, int number) {
-            super(name, visible);
+            super(name,visible);
             this.linkName= name;
             this.mContext = context;
             this.fieldNumber = number;
+            setName(linkName);
             setObservable(true);
-            setObserveType(CoAP.Type.CON);
-            getAttributes().setObservable();
+            setObserveType(CoAP.Type.NON);;
             getAttributes().setTitle(linkName);
+            getAttributes().setObservable();
             UniversalListener uListener = new UniversalListener();
             IntentFilter broadcastFilter = new IntentFilter();
             broadcastFilter.addAction(action);
@@ -169,6 +170,7 @@ public class CoAPServer extends Service {
             super("time");
             setObservable(true);
             setObserveType(CoAP.Type.CON);
+            getAttributes().setTitle("time");
             getAttributes().setObservable();
             handler.postDelayed(runnable, 1100);
         }

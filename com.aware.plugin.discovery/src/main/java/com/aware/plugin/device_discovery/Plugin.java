@@ -2,11 +2,7 @@ package com.aware.plugin.device_discovery;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
@@ -60,7 +56,7 @@ public class Plugin extends Aware_Plugin {
         startService(NSD_SERVICE);
 
         //start COAP SERVER Service
-        COAP_SERVICE = new Intent(this, CoAPServer.class);
+        COAP_SERVICE = new Intent(this, COAPServer.class);
         startService(COAP_SERVICE);
     }
 

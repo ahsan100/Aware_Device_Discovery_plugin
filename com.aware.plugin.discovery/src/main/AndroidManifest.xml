@@ -39,14 +39,20 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".CoAPGet" />
+        <activity
+            android:name=".CoapObserve"
+            android:exported="true"
+            android:theme="@style/AppTheme"/>
 
         <service
-            android:name=".CoAPServer"
+            android:name=".COAPServer"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".CoAPDiscovery"></activity>
+        <activity
+            android:name=".CoapDiscovery"
+            android:exported="true"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

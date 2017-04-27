@@ -17,29 +17,32 @@ import org.eclipse.californium.core.CoapResponse;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class CoAPDiscovery extends AppCompatActivity {
+public class CoapDiscovery extends AppCompatActivity {
 
     public Set DISCOVERY;
     public ArrayAdapter arrayAdapter;
     public ListView listView;
     public ArrayList<String> URL;
     public Object[] numberUrl;
-    public Intent intentSend;
-    public String ADDRESS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final String ADDRESS;
+        final Intent intentSend;
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_co_apdiscovery);
+        setContentView(R.layout.activity_coap_discovery);
         listView = (ListView) findViewById(R.id.listViewDiscovery);
-        Log.d("QWERTY", "onCreate: is working");
+
         URL= new ArrayList<String>();
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, URL);
         listView.setAdapter(arrayAdapter);
-        intentSend = new Intent(this, CoAPGet.class);
+        intentSend = new Intent(this, CoapObserve.class);
         Intent intent = getIntent();
         ADDRESS = intent.getStringExtra("address");
-        new CoapDiscoverTask().execute(ADDRESS);
+        new CoapDiscoverTask().execute(ADDRESS.substring(1)+":5683"+"/.well-known/core");
+
+
         listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener(){
                     @Override
@@ -58,23 +61,24 @@ public class CoAPDiscovery extends AppCompatActivity {
 
         protected CoapResponse doInBackground(String... args) {
             CoapClient client = new CoapClient(args[0]);
-            DISCOVERY = client.discover();
-            numberUrl = DISCOVERY.toArray();
-            //InetSocketAddress bindToAddress = new InetSocketAddress("192.168.173.113", 5683);
-            //client.setEndpoint(new CoapEndpoint(bindToAddress));
+            Log.d("DISCOVERY", "doInBackground: "+ args[0]);
             return client.get();
         }
 
         protected void onPostExecute(CoapResponse response) {
-            for(int i = 0  ; i < numberUrl.length; i++ ){
-                URL.add(numberUrl[i].toString().substring(1,numberUrl[i].toString().indexOf(">")));
-            }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    arrayAdapter.notifyDataSetChanged();
+            if (response!=null) {
+                String[] resources = response.getResponseText().split(",");
+                for(int i=0; i < resources.length; i++){
+                    //Log.d("DISCOVERY", "onPostExecute: " + resources[i].substring(2,resources[i].indexOf(">")));
+                    URL.add(resources[i].substring(1,resources[i].indexOf(">")));
                 }
-            });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
         }
     }
 }
